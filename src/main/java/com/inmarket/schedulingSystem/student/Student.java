@@ -1,8 +1,10 @@
 package com.inmarket.schedulingSystem.student;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.inmarket.schedulingSystem.course.Course;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,12 +23,9 @@ public class Student {
     )
     private long id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "course_like",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private Set<Course> likedCourses;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "enrolledStudents")
+    private Set<Course> courses = new HashSet<>();
 
     private String lastName;
 
@@ -71,19 +70,19 @@ public class Student {
         this.firstName = firstName;
     }
 
-    public Set<Course> getLikedCourses() {
-        return likedCourses;
+    public Set<Course> getCourses() {
+        return courses;
     }
 
-    public void setLikedCourses(Set<Course> likedCourses) {
-        this.likedCourses = likedCourses;
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
     }
 
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
-                ", likedCourses=" + likedCourses +
+                ", curses=" + courses +
                 ", lastName='" + lastName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 '}';

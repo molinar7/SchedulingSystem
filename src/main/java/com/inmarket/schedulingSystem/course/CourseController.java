@@ -42,4 +42,17 @@ public class CourseController {
 
     }
 
+    @PutMapping("/{courseId}/students/{studentId}")
+    private void enrollStudentToCourse(
+            @PathVariable Long courseId,
+            @PathVariable Long studentId
+    ) {
+        courseService.addStudentToCourse(courseId, studentId);
+    }
+
+    @GetMapping("/{courseId}")
+    public Course getCourseById(@PathVariable Long courseId) {
+        return courseService.getCourseById(courseId);
+    }
+
 }

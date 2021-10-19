@@ -2,20 +2,25 @@ package com.inmarket.schedulingSystem.course;
 
 
 import com.inmarket.schedulingSystem.student.Student;
+import com.inmarket.schedulingSystem.student.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseService {
 
     private final CourseRepository courseRepository;
 
+    private final StudentRepository studentRepository;
+
     @Autowired
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, StudentRepository studentRepository) {
         this.courseRepository = courseRepository;
+        this.studentRepository = studentRepository;
     }
 
     public List<Course> getCourses(){
@@ -45,6 +50,24 @@ public class CourseService {
             if(description!= null && !description.isEmpty()){
                 course.setDescription(description);
             }
+        }
+    }
+
+    public void addStudentToCourse(Long courseId, Long studentId) { //
+        Course course = courseRepository.getById(courseId); // here we can add logic to check if the course uis already enrolled.
+        Student student = studentRepository.getById(studentId);
+        course.enrollStudent(student);
+        courseRepository.save(course);
+
+    }
+
+    public Course getCourseById(Long courseId) {
+        Optional<Course> courseOpt = Optional.of(courseRepository.findById(courseId).get());
+
+        if (courseOpt.isPresent()) {
+            return courseOpt.get();
+        } else {
+            throw new IllegalStateException("Course with id does not exist");
         }
     }
 }

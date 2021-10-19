@@ -1,11 +1,13 @@
 package com.inmarket.schedulingSystem.student;
 
 
+import com.inmarket.schedulingSystem.course.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -48,6 +50,16 @@ public class StudentService {
 
         if(lastName != null && !lastName.isEmpty()){
             student.setLastName(lastName);
+        }
+    }
+
+    public Student getStudentById(Long studentId) {
+        Optional<Student> studentOpt = Optional.of(studentRepository.findById(studentId).get());
+
+        if (studentOpt.isPresent()) {
+            return studentOpt.get();
+        } else {
+            throw new IllegalStateException("Course with id does not exist");
         }
     }
 }
